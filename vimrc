@@ -1,99 +1,206 @@
+" Install or update all bundles form github
 source ~/.vim/bundles.vim
 
-" encoding dectection
+" Uncomment the next line to make Vim more Vi-compatible
+" NOTE: debian.vim sets 'nocompatible'.  Setting 'compatible' changes numerous
+" options, so any other options should be set AFTER setting 'compatible'.
+"set compatible
+set nocompatible
+
+" Uncomment the next line to set default encoding order
+"set fenc =utf-8
+"set fileencodings =utf-8,usc-bom,euc-jp,gb18030,gbk,gb2312,cp936
 set fileencodings=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1
+"set enconding=utf-8
+set fileformats=unix,dos,mac
 
-" enable filetype dectection and ft specific plugin/indent
-filetype plugin indent on
+" Vim5 and later versions support syntax highlighting. Uncommenting the
+" following enables syntax highlighting by default.
+" syntax enable
+if has("syntax")
+  syntax on
+endif
 
-" enable syntax hightlight and completion
-syntax on
+" Uncomment the following to have Vim load indentation rules and plugins
+" according to the detected filetype.
+if has("autocmd")
+  filetype plugin indent on
+endif
 
-"--------
-" Vim UI
-"--------
-" color scheme
-set background=dark
-color solarized
+" All my marcos start with , as <LocalLeader>
+let maplocalleader=','
+
+" Need confirm if process read-only or un-saved file
+set confirm
+
+"--------------------------------
+"           Vim UI
+"--------------------------------
+" If using a dark background within the editing area and syntax highlighting
+" turn on this option as well
+"set background=dark
+
+" set font and size
+if has("gui_running")
+  set guifont=consolas\ 14
+  "set guifont=monaco\ 11
+else
+  if $TERM == "xterm"
+    set t_Co=256
+  endif
+endif
+
+" load my customized color scheme
+colorscheme watsonw
 
 " highlight current line
-au WinLeave * set nocursorline nocursorcolumn
-au WinEnter * set cursorline cursorcolumn
-set cursorline cursorcolumn
+"au WinLeave * set nocursorline nocursorcolumn
+"au WinEnter * set cursorline cursorcolumn
+"set cursorline cursorcolumn
 
-" search
-set incsearch
-"set highlight 	" conflict with highlight current line
-set ignorecase
-set smartcase
+" Uncomment the following to have Vim jump to the last position when reopening a file
+"if has("autocmd")
+"  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+"endif
 
-" editor settings
+" History lines
 set history=1000
-set nocompatible
-set nofoldenable                                                  " disable folding"
-set confirm                                                       " prompt when existing from an unsaved file
-set backspace=indent,eol,start                                    " More powerful backspacing
-set t_Co=256                                                      " Explicitly tell vim that the terminal has 256 colors "
-set mouse=a                                                       " use mouse in all modes
-set report=0                                                      " always report number of lines changed                "
-set nowrap                                                        " dont wrap lines
-set scrolloff=5                                                   " 5 lines above/below cursor when scrolling
-set number                                                        " show line numbers
-set showmatch                                                     " show matching bracket (briefly jump)
-set showcmd                                                       " show typed command in status bar
-set title                                                         " show file in titlebar
-set laststatus=2                                                  " use 2 lines for the status bar
-set matchtime=2                                                   " show matching bracket for 0.2 seconds
-set matchpairs+=<:>                                               " specially for html
-" set relativenumber
 
-" Default Indentation
-set autoindent
-set smartindent     " indent when
-set tabstop=4       " tab width
-set softtabstop=4   " backspace
-set shiftwidth=4    " indent width
-" set textwidth=79
-" set smarttab
-set expandtab       " expand tab to space
+" Uncommet to enable smart backspace
+set backspace=indent,eol,start
 
-autocmd FileType php setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=120
-autocmd FileType ruby setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=120
-autocmd FileType php setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=120
-autocmd FileType coffee,javascript setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=120
-autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=120
-autocmd FileType html,htmldjango,xhtml,haml setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=0
-autocmd FileType sass,scss,css setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=120
+" Automatically save before commands like :next and :make
+"set autowrite
 
-" syntax support
-autocmd Syntax javascript set syntax=jquery   " JQuery syntax support
-" js
-let g:html_indent_inctags = "html,body,head,tbody"
-let g:html_indent_script1 = "inc"
-let g:html_indent_style1 = "inc"
+" Automatically reload file when file is modified
+" set autoread
 
-"-----------------
+" Hide buffers when they are abandoned
+"set hidden
+
+" Enable mouse usage (all modes)
+set mouse=a
+
+" Dont wrap lines
+set nowrap
+
+" Uncommenet the following to show line number
+set number
+set ruler
+
+set magic
+set title
+
+" status line
+set laststatus=2
+
+" set command height at the bottom of editing area
+set cmdheight=1
+
+" Uncomment the next line makes word with before char not be wrapped
+set iskeyword+=_,$,@,%,#,-
+
+" Uncomment below to enable save files using Ctrl+S or s
+" nmap <C-s> <ESC>:w<CR>
+" imap <C-s> <C-O>:w<CR>
+noremap   <C-s> :update<CR>
+vnoremap  <C-s> <ESC>:update<CR>
+inoremap  <C-s> <ESC>:update<CR>
+
+"""""""""""""""""""""""""""""""
+" Search and match
+"""""""""""""""""""""""""""""""
+set showmatch			" Show matching brackets
+set ignorecase			" Do case insensitive matching
+set smartcase			" Do smart case matching
+set incsearch			" Incremental search, search as you type
+set hlsearch			" Highlight search results
+set vb t_vb=
+set novisualbell		" No flickering
+set noerrorbells
+
+"""""""""""""""""""""""""""""""
+" File formats and composing
+"""""""""""""""""""""""""""""""
+"set formatoptions=tcrqn			" add comment chars to current line
+set shiftwidth=4
+set tabstop=4
+"set expandtab
+set noexpandtab
+"set smarttab
+
+" expand tab for different file types
+au FileType html,python,vim,javascript setl shiftwidth=2
+au FileType html,python,vim,javascript setl tabstop=2
+au FileType java,php,c,cpp setl shiftwidth=4
+au FileType java,php,c,cpp setl tabstop=4
+
+set autoindent			" auto indent current line as previous line
+set smartindent			" auto indent for C code
+"set softtabstop=4
+"set textwidth=80
+
+" show all symbols include whitespace, tab and eol
+" set list				                " show all symbols
+set listchars=tab:»·,trail:·			" turn TAB symbol to '>---'
+
+" fold code -> space key
+"set foldenable
+"set foldmethod=indent
+"nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" auto load vim
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Fast reloading of the .vimrc
+nmap <silent> <LocalLeader>sv :source ~/.vimrc<cr>
+"Fast editing of .vimrc
+nmap <silent> <LocalLeader>ev :e ~/.vimrc<cr>
+"When .vimrc is edited, reload it
+autocmd! bufwritepost .vimrc source ~/.vimrc
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Useful Functions
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" easier navigation between split windows
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
+
+" When editing a file, always jump to the last cursor position
+autocmd BufReadPost *
+      \ if ! exists("g:leave_my_cursor_position_alone") |
+      \     if line("'\"") > 0 && line ("'\"") <= line("$") |
+      \         exe "normal g'\"" |
+      \     endif |
+      \ endif
+
+" w!! to sudo & write a file
+cmap w!! %!sudo tee >/dev/null %
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin settings
-"-----------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Rainbow parentheses for Lisp and variants
 let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['brown',       'firebrick3'],
-    \ ['gray',        'RoyalBlue3'],
-    \ ['black',       'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['red',         'firebrick3'],
-    \ ]
+	\ ['brown',        'RoyalBlue3'],
+	\ ['Darkblue',     'SeaGreen3'],
+	\ ['darkgray',     'DarkOrchid3'],
+	\ ['darkgreen',    'firebrick3'],
+	\ ['darkcyan',     'RoyalBlue3'],
+	\ ['darkred',      'SeaGreen3'],
+	\ ['darkmagenta',  'DarkOrchid3'],
+	\ ['brown',        'firebrick3'],
+	\ ['gray',         'RoyalBlue3'],
+	\ ['black',        'SeaGreen3'],
+	\ ['darkmagenta',  'DarkOrchid3'],
+	\ ['Darkblue',     'firebrick3'],
+	\ ['darkgreen',    'RoyalBlue3'],
+	\ ['darkcyan',     'SeaGreen3'],
+	\ ['darkred',      'DarkOrchid3'],
+	\ ['red',          'firebrick3'],
+	\ ]
 let g:rbpt_max = 16
 autocmd Syntax lisp,scheme,clojure,racket RainbowParenthesesToggle
 
@@ -107,7 +214,7 @@ hi Tb_VisibleNormal ctermbg=252 ctermfg=235
 hi Tb_VisibleChanged guifg=green ctermbg=252 ctermfg=white
 
 " easy-motion
-let g:EasyMotion_leader_key = '<Leader>'
+let g:EasyMotion_leader_key = '<LocalLeader>'
 
 " Tagbar
 let g:tagbar_left=1
@@ -191,7 +298,7 @@ let g:neocomplcache_omni_patterns.erlang = '[a-zA-Z]\|:'
 let g:SuperTabDefaultCompletionType = '<C-X><C-U>'
 let g:SuperTabRetainCompletionType=2
 
-" ctrlp
+" ctrlp; shorcut is ctrl+p
 set wildignore+=*/tmp/*,*.so,*.o,*.a,*.obj,*.swp,*.zip,*.pyc,*.pyo,*.class,.DS_Store  " MacOSX/Linux
 let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
 
@@ -203,66 +310,75 @@ nmap <F6> :NERDTreeToggle<cr>
 nmap <F3> :GundoToggle<cr>
 nmap <F4> :IndentGuidesToggle<cr>
 nmap  <D-/> :
-nnoremap <leader>a :Ack
-nnoremap <leader>v V`]
+nnoremap <LocalLeader>a :Ack
+nnoremap <LocalLeader>v V`]
 
-"------------------
-" Useful Functions
-"------------------
-" easier navigation between split windows
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Exuberant ctags
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set tags=tags;
+set autochdir
 
-" When editing a file, always jump to the last cursor position
-autocmd BufReadPost *
-      \ if ! exists("g:leave_my_cursor_position_alone") |
-      \     if line("'\"") > 0 && line ("'\"") <= line("$") |
-      \         exe "normal g'\"" |
-      \     endif |
-      \ endif
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Taglist and winmanager is replaced with tagbar
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" let Tlist_Show_One_File=1
+" let Tlist_Exit_OnlyWindow=1
+"let g:winManagerWindowLayout='FileExplorer|TagList'
+"nmap <LocalLeader>wm :WMToggle<CR>
 
-" w!! to sudo & write a file
-cmap w!! %!sudo tee >/dev/null %
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" QuickFix
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <S-F9> :cp<CR>
+nmap <S-F10> :cn<CR>
 
-" Quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :e $MYVIMRC<CR>
-nmap <silent> <leader>sv :so $MYVIMRC<CR>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" MiniBufExplorer is replaced with Tabbar
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" " C-w,h j k l  to switch windows
+" let g:miniBufExplMapWindowNavVim = 1
+" " C-arrow_key to switch windows
+" let g:miniBufExplMapWindowNavArrows = 1
+" let g:miniBufExplMapCTabSwitchBufs = 1
+" let g:miniBufExplModSelTarget = 1
 
-" sublime key bindings
-nmap <D-]> >>
-nmap <D-[> <<
-vmap <D-[> <gv
-vmap <D-]> >gv
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" A -- for h,cpp files switch
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <silent> <F12> :A<CR>
 
-" eggcache vim
-nnoremap ; :
-:command W w
-:command WQ wq
-:command Wq wq
-:command Q q
-:command Qa qa
-:command QA qa
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Grep -- project search
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"nnoremap <silent> <F3> :Grep<CR>
 
-" for macvim
-if has("gui_running")
-    set go=aAce  " remove toolbar
-    "set transparency=30
-    set guifont=Monaco:h13
-    set showtabline=2
-    set columns=140
-    set lines=40
-    noremap <D-M-Left> :tabprevious<cr>
-    noremap <D-M-Right> :tabnext<cr>
-    map <D-1> 1gt
-    map <D-2> 2gt
-    map <D-3> 3gt
-    map <D-4> 4gt
-    map <D-5> 5gt
-    map <D-6> 6gt
-    map <D-7> 7gt
-    map <D-8> 8gt
-    map <D-9> 9gt
-    map <D-0> :tablast<CR>
-endif
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Mark-karkat/vim-mark -- Highlight words like SourceInsight
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" higtlight/toggel current word
+nmap <silent> <LocalLeader>hl <Leader>m
+vmap <silent> <LocalLeader>hl <Leader>m
+map  <S-F8> <Leader>m
+" clear all hight or current word
+nmap <silent> <LocalLeader>hc <Leader>n
+vmap <silent> <LocalLeader>hc <Leader>n
+" search regExp to highlight
+nmap <silent> <LocalLeader>hr <Leader>r
+vmap <silent> <LocalLeader>hr <Leader>r
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tabularize -- improve readability of your code
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" :Tabularize /:
+" :Tabularize /:\zs
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" showmarks -- reset color to current color scheme
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Highlighting: Setup some nice colours to show the mark positions.
+hi default ShowMarksHLl ctermfg=darkgreen   ctermbg=none cterm=bold guifg=blue     guibg=lightblue gui=bold
+hi default ShowMarksHLu ctermfg=darkred     ctermbg=none cterm=bold guifg=darkred  guibg=lightblue gui=bold
+hi default ShowMarksHLo ctermfg=lightblue   ctermbg=grey cterm=bold guifg=darkgrey guibg=lightblue gui=bold
+hi default ShowMarksHLm ctermfg=darkmagenta ctermbg=none cterm=bold guifg=magenta  guibg=lightblue gui=bold
+
